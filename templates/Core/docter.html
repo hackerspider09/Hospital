@@ -1,0 +1,26 @@
+
+
+{% extends 'Core/base.html' %}
+{% block "title" %}
+Docter
+{% endblock "title" %} 
+{% block "codeblock" %}
+
+<div class="container">
+    <h1>{{title}}</h1>
+
+    <div class="container">
+        <p>Username: {{ user.username }}</p>
+        <p>First Name: {{ user.first_name }}</p>
+        <p>Username: {{ user.last_name }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Phone: {{ user.phone }}</p>
+        <p>Address: {{ user.address }}</p>
+        {% if user.profile %}
+            <img src="{{ user.profile.url }}" alt="Profile Image"class="img-thumbnail">
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock "codeblock" %}

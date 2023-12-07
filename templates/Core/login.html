@@ -1,0 +1,44 @@
+{% extends 'Core/base.html' %}
+
+{% block "title" %}
+Login
+{% endblock "title" %} 
+
+
+
+
+{% block "codeblock" %}
+   
+    <div class="container">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="exampleInputEmail1">Username</label>
+              <input type="text" class="form-control" name="username" aria-describedby="emailHelp" placeholder="Enter Username">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" class="form-control" name="password" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <h5>Without an account? <a  class="ghost" id="signUp" href="/signup/" style="color:blue;"><u>Sign Up</u></a></h5>
+            
+        </form>
+    </div>
+
+
+    <script>
+        const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
+
+signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+
+
+    </script>
+{% endblock "codeblock" %}
