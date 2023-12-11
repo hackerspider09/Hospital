@@ -19,10 +19,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
     path('docter/', views.docter_page_view, name='docter_page_view'),
     path('patient/', views.patient_page_view, name='patient_page_view'),
     path('logout/', views.logout_view, name='logout_view'),
+    path('blog/create/', views.PostCreateView.as_view(), name='create_blog'),
+    path('blog/update/<int:pk>/', views.PostUpdateView.as_view(), name='update_blog'),
+    path('blog/view/<int:pk>/', views.PostDetailView.as_view(), name='view_blog'),
 ]

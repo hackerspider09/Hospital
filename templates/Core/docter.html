@@ -22,5 +22,26 @@ Docter
     </div>
 </div>
 
+<div class="container mt-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for blog in blogs %}
+        <div class="card mb-3 m-1" style="max-width: 340px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{blog.image.url}}" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{blog.title}}</h5>
+                  <p class="card-text">{{blog.status}}</p>
+                  <a href="/blog/update/{{blog.id}}/"><button type="button" class="btn btn-primary">Update</button></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+</div>
+
 
 {% endblock "codeblock" %}

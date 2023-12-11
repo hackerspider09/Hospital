@@ -4,6 +4,10 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from .decorators import *
 from django.contrib import messages
+from django.views.generic import UpdateView, CreateView,DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+from django.utils.decorators import method_decorator
 
 def login_view(request):
     if request.method == "POST":
@@ -61,9 +65,13 @@ def signup_view(request):
 @is_docter
 def docter_page_view(request):
     user = User.objects.get(username=request.user)
+
+    blogs = Blog.objects.all().order_by("status")
+
     context ={
         'title':"Docter Dashboard",
         'user':user,
+        'blogs':blogs,
     }
     return render(request,"Core/docter.html",context=context)
 
@@ -72,9 +80,11 @@ def docter_page_view(request):
 @is_patient
 def patient_page_view(request):
     user = User.objects.get(username=request.user)
+    blogs = Blog.objects.filter(status="published").order_by("title")
     context ={
-        'title':"Docter Dashboard",
+        'title':"Patient Dashboard",
         'user':user,
+        "blogs":blogs
     }
     return render(request,"Core/patient.html",context=context)
 
@@ -85,3 +95,51 @@ def logout_view(request):
         print("logged out")
         logout(request)
     return redirect(login_view)
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Blog
+    fields = ['category', 'title', 'image','content','summary','status']
+    template_name = 'Core/create.html'
+
+    @method_decorator(is_docter)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        if self.object.status == 'published':
+            return reverse('docter_page_view')  # Redirect to home page for published blogs
+        elif self.object.status == 'draft':
+            return reverse('update_blog', kwargs={'pk': self.object.pk})  # Redirect to update page for draft blogs
+    
+    
+    def form_valid(self, form):
+        print(self.request.user)
+        form.instance.doctor = self.request.user
+        return super().form_valid(form)
+    
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Blog
+    fields = ['category','title','image','content','summary','status']
+
+    template_name ='Core/create.html'
+
+    def get_success_url(self):
+        if self.object.status == 'published':
+            return reverse('docter_page_view')  # Redirect to home page for published blogs
+        elif self.object.status == 'draft':
+            return reverse('update_blog', kwargs={'pk': self.object.pk})  # Redirect to update page for draft blogs
+
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+class PostDetailView(DetailView):
+    model = Blog
+    template_name ='Core/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(context["blog"].doctor)
+        return context

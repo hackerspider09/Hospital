@@ -11,7 +11,7 @@ def is_docter(view_fun):
             return view_fun(request,*args,**kwargs)
         except:
             logout(request)
-            return redirect("login_view")
+            return redirect("login")
                             
     return wrap
 
@@ -20,7 +20,7 @@ def is_patient(view_fun):
         user = User.objects.get(username=request.user)
         try:
             staff = Staff.objects.get(user=user)
-            return redirect("login_view")
+            return redirect("login")
             logout(request)
         except:
             return view_fun(request,*args,**kwargs)

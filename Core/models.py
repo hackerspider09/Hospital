@@ -18,5 +18,28 @@ class Staff(models.Model):
 	
 	def __str__(self):
 		return f"{self.user}"
-    
-	
+
+def getUploadPath(instance,filename):
+    return str(f"Blogs/{instance.doctor.username}/{filename}")  
+
+class Blog(models.Model):
+	doctor = models.ForeignKey(User, on_delete=models.CASCADE)
+	category_choice = (
+		("mental_health","Mental Health"),
+		("heart_disease","Heart Disease"),
+		("covid19","Covid19"),
+		("immunization","Immunization")
+	)
+	category = models.CharField(max_length=25,choices=category_choice)
+	title = models.CharField(max_length=50)
+	image = models.ImageField(upload_to=getUploadPath)
+	content = models.TextField()
+	summary = models.TextField()
+	status_choice = (
+		("draft","Draft"),
+		("published","Published"),
+		("take_down","Take Down")
+	)
+	status = models.CharField(max_length=25,choices=status_choice)
+
+

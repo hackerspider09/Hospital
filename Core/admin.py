@@ -46,3 +46,7 @@ class UserAdmin(BaseAdmin):
 @admin.register(Staff)
 class StaffAdmin(admin.ModelAdmin):
 	list_display=('user','joining_date')
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+	list_display=('doctor','status')

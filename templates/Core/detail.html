@@ -1,0 +1,29 @@
+
+
+{% extends 'Core/base.html' %}
+{% block "title" %}
+Docter
+{% endblock "title" %} 
+{% block "codeblock" %}
+
+<div class="container mt-5">
+    <div class="container">
+        <h1>{{object.title}}</h1>    
+        <small>category : {{object.category}}</small><br>    
+        <small>Author : {{blog.doctor.username}}</small>    
+    </div>    
+    <div class="container">
+        <img src="{{object.image.url}}" class="img-fluid rounded-start" alt="...">
+    </div>
+    <div class="container">
+        <h5>Content</h5>
+        <p>{{object.content}}</p>
+    </div>
+    <div class="container">
+        <h5>Summary</h5>
+        <p>{{object.summary}}</p>
+    </div>
+</div>
+
+
+{% endblock "codeblock" %}

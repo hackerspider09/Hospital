@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-bl&ue42g0r6m#va=0wit(id!0abac_l9g#9+_yf11gf7p!a@ra
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*','prashkumar.pythonanywhere.com']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    "crispy_bootstrap4",
     'Core',
 ]
 
@@ -91,10 +93,6 @@ DATABASES = {
         'PASSWORD': 'prasad123',
         'HOST': 'prashkumar.mysql.pythonanywhere-services.com',
         'PORT': '3306',
-        'OPTIONS': {
-            'init_command':"SET sql_mode ='STRICT_TRANS_TABLE'"
-        
-        }
     }
 }
 
@@ -145,5 +143,11 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = 'media/'
+
+LOGIN_URL = 'login'  # Set it to your login URL name if different
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
 
 AUTH_USER_MODEL = "Core.User"
