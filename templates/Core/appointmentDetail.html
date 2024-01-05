@@ -1,0 +1,22 @@
+
+
+{% extends 'Core/base.html' %}
+{% block "title" %}
+Detail
+{% endblock "title" %} 
+{% block "codeblock" %}
+
+<div class="container mt-5">
+    <div class="container">
+        <h2>Doctor : {{object.doctor.username}}</h2>   
+        <h2>Patient : {{object.patient.username}}</h2>   
+        <h2>Specialty : {{object.specialty}}</h2>    
+        <h2>Appointment Date : {{object.date}}</h2>    
+        <h2>Appointment Time : {{object.start_time}}</h2>    
+        <h2>Appointment End Time : {{object.end_time}}</h2>    
+
+    </div>    
+</div>
+
+
+{% endblock "codeblock" %}

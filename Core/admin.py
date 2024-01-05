@@ -50,3 +50,7 @@ class StaffAdmin(admin.ModelAdmin):
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
 	list_display=('doctor','status')
+
+@admin.register(Appointment)
+class AppointmentAdmin(admin.ModelAdmin):
+	list_display=('patient','doctor')

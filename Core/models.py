@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from datetime import timedelta,datetime
+from django.utils import timezone
 
 def getPath(instance,filename):
     return str(f"Profile/{instance.username}/{filename}")
@@ -42,4 +44,26 @@ class Blog(models.Model):
 	)
 	status = models.CharField(max_length=25,choices=status_choice)
 
+class Appointment(models.Model):
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments')
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='doctor_appointments')
+    specialty = models.CharField(max_length=100)
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.DateTimeField()  
+    duration = models.DurationField(default=timedelta(minutes=45))
 
+    def save(self, *args, **kwargs):
+        date_obj = datetime.strptime(self.date, '%Y-%m-%d').date()
+        start_time_obj = datetime.strptime(self.start_time, '%H:%M').time()
+        start_datetime = datetime.combine(date_obj, start_time_obj)
+        print(self.date,self.start_time)
+        print(start_datetime)
+        # self.end_time = self.start_time + timedelta(minutes=45)
+        # self.end_time = start_datetime + timedelta(minutes=45)
+        start_datetime_aware = timezone.make_aware(start_datetime, timezone.get_current_timezone())
+        self.end_time = start_datetime_aware + timedelta(minutes=45)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.patient}"

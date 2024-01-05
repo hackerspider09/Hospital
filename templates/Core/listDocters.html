@@ -1,0 +1,32 @@
+
+
+{% extends 'Core/base.html' %}
+{% block "title" %}
+Patient
+{% endblock "title" %} 
+{% block "codeblock" %}
+
+<div class="container">
+    <h1>{{title}}</h1>
+
+</div>
+
+<div class="container mt-5">
+  <div>
+    <h1 class="m-5 text-center ">Book Appointment</h1>
+    <div class="d-flex flex-row flex-wrap justify-content-between">
+      {% for doctor in doctors %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ doctor.user.profile.url }}" alt="{{ doctor.user.username }} Profile Picture">
+            <div class="card-body">
+                <h5 class="card-title">{{ doctor.user.username }}</h5>
+                <a href="/makeappointment/{{ doctor.user.id }}" class="btn btn-primary">Make appointment</a>
+            </div>
+          </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock "codeblock" %}

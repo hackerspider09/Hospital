@@ -1,0 +1,44 @@
+
+
+{% extends 'Core/base.html' %}
+{% block "title" %}
+Patient
+{% endblock "title" %} 
+{% block "codeblock" %}
+
+<div class="container">
+    <h1>{{title}}</h1>
+
+</div>
+
+<div class="container mt-5">
+  <div>
+    <h1 class="m-5 text-center ">Make Appointment</h1>
+    <h2>Doctor: {{ doctor.username }}</h2>
+    <div id="appointmentForm" >
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="specialty">Specialty</label>
+                <input type="text" class="form-control" id="specialty" name="specialty" required>
+              </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+              </div>
+            <div class="form-group">
+                <label for="time">Time</label>
+                <input type="time" class="form-control" id="time" name="start_time" required>
+              </div>
+            <div class="form-group mt-5">
+                <button type="submit" class="btn btn-primary">Book Appointment</button>
+              </div>
+
+        </form>
+    </div>
+  </div>
+</div>
+
+
+{% endblock "codeblock" %}

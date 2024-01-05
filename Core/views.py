@@ -8,8 +8,21 @@ from django.views.generic import UpdateView, CreateView,DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.utils.decorators import method_decorator
+from createEvent import main
 
 def login_view(request):
+    # main()
+    # create_event_for_new_user()
+    try:
+        user= User.objects.get(username=request.user)
+        try:
+            staff_query = Staff.objects.get(user=user)
+            return redirect(docter_page_view)
+        except:
+            return redirect(patient_page_view)
+    except:
+        pass
+
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -17,6 +30,7 @@ def login_view(request):
         user = authenticate(username=username, password= password)
         if user is not None:
             login(request, user)
+            
 
             try:
                 staff_query = Staff.objects.get(user=user)
@@ -64,14 +78,19 @@ def signup_view(request):
 @login_required(login_url="login")
 @is_docter
 def docter_page_view(request):
+    # try:
+    #     main()
+    # except:
+    #     pass
     user = User.objects.get(username=request.user)
 
-    blogs = Blog.objects.all().order_by("status")
-
+    blogs = Blog.objects.filter(doctor=request.user).order_by("status")
+    appointment = Appointment.objects.filter(doctor=request.user)
     context ={
         'title':"Docter Dashboard",
         'user':user,
         'blogs':blogs,
+        'appointments':appointment
     }
     return render(request,"Core/docter.html",context=context)
 
@@ -81,13 +100,18 @@ def docter_page_view(request):
 def patient_page_view(request):
     user = User.objects.get(username=request.user)
     blogs = Blog.objects.filter(status="published").order_by("title")
+    appointment = Appointment.objects.filter(patient=request.user)
     context ={
         'title':"Patient Dashboard",
         'user':user,
-        "blogs":blogs
+        "blogs":blogs,
+        'appointments':appointment,
     }
     return render(request,"Core/patient.html",context=context)
 
+def doctor_list(request):
+    doctors = Staff.objects.all()
+    return render(request, 'Core/listDocters.html', {'doctors': doctors})
 
 # @login_required(login_url="login_view")
 def logout_view(request):
@@ -128,7 +152,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         if self.object.status == 'published':
             return reverse('docter_page_view')  # Redirect to home page for published blogs
         elif self.object.status == 'draft':
-            return reverse('update_blog', kwargs={'pk': self.object.pk})  # Redirect to update page for draft blogs
+            return reverse('update_blog', kwargs={'pk': self.object.pk})  
 
 
     def form_valid(self, form):
@@ -142,4 +166,51 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(context["blog"].doctor)
+        return context
+    
+
+def make_appointment(request, docterId):
+    try:
+        print(docterId)
+        doctor = User.objects.get(id=docterId)  
+        print(docterId)
+        print(doctor.username)
+    except:
+
+        return render(request, 'Core/bookAppointment.html', { 'doctor': doctor})
+
+
+
+    if request.method == 'POST':
+        specialty = request.POST['specialty']
+        date = request.POST['date']
+        start_time = request.POST['start_time']
+
+        # Create the appointment instance
+        appointment = Appointment(
+            doctor=doctor,
+            patient=request.user,
+            specialty=specialty,
+            date=date,
+            start_time=start_time,
+            # Add more fields and data as needed
+        )
+        appointment.save()
+
+        main(appointment)
+
+        # return HttpResponseRedirect('/bookappointment/')  
+        return HttpResponseRedirect(reverse('view_appointment', kwargs={'pk': appointment.id}))
+
+
+    else:
+        return render(request, 'Core/bookAppointment.html', {'doctor': doctor})
+    
+class AppointmentDetailView(DetailView):
+    model = Appointment
+    template_name ='Core/appointmentDetail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(context)
         return context

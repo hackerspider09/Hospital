@@ -22,6 +22,38 @@ Docter
     </div>
 </div>
 
+<div>
+  <h1 class="m-5 text-center">Appointments</h1>
+  <div>
+    {% if appointments %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Patient</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">Start Time</th>
+          <th scope="col">End Date</th>
+          <th scope="col">View</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appointment in appointments %}
+        <tr>
+          <th scope="row">{{appointment.patient.username}}</th>
+          <td>{{appointment.date}}</td>
+          <td>{{appointment.start_time}}</td>
+          <td>{{appointment.end_time}}</td>
+          <td><a href="/view/appointment/{{appointment.id}}/">View</a> </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No appointments available.</p>
+    {% endif %}
+    
+  </div>
+
 <div class="container mt-5">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for blog in blogs %}
